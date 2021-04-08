@@ -3,7 +3,7 @@
 Call as `simple-timelapse.sh 1m` to take an image every 1 minute.
 
 ## code
-```sh
+```bash
 cam="GENERAL WEBCAM"
 
 mkdir images
