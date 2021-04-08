@@ -1,7 +1,8 @@
 # simple-timelapse
 
-Call as: `simple-timelapse.sh 1m` takes an image every 1 minute.
+Call as: `simple-timelapse.sh 1m` to take an image every 1 minute.
 
+## code
 ```
 cam="GENERAL WEBCAM"
 
