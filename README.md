@@ -1,7 +1,8 @@
 # simple-timelapse
 
 Call as `simple-timelapse.sh 1m` to take an image every 1 minute.
-Use any format supported by [https://man7.org/linux/man-pages/man1/sleep.1.html]
+
+Use any format supported by (sleep)[https://man7.org/linux/man-pages/man1/sleep.1.html]
 
 ## code
 ```bash
