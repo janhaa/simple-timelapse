@@ -1,5 +1,7 @@
 # simple-timelapse
 
+`simple-timelapse.sh 1m` takes an image every 1 minute.
+
 ```
 cam="GENERAL WEBCAM"
 
