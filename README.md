@@ -5,7 +5,7 @@ Call as `simple-timelapse.sh 1m` to take an image every 1 minute.
 You can use any duration format supported by [sleep](https://man7.org/linux/man-pages/man1/sleep.1.html).
 
 ## dependencies
-* `ffmpeg`
+* ffmpeg
 
 ## code
 ```bash
