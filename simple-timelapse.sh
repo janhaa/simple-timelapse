@@ -3,22 +3,25 @@
 # Function to get the highest resolution for Linux
 get_highest_resolution_linux() {
     local cam=$1
-    # Get all supported formats and resolutions
-    v4l2-ctl --device="$cam" --list-formats-ext | grep -E "Size:|MJPG|YUYV" | \
-    awk '/MJPG|YUYV/{format=$0} /Size:/{gsub(/Size: Discrete /,""); gsub(/x/, " "); print format " " $0}' | \
-    sort -k3 -nr -k4 -nr | head -1 | awk '{print $3"x"$4}'
+    # Get all supported formats and resolutions, extract the highest resolution
+    v4l2-ctl --device="$cam" --list-formats-ext | \
+    grep -o "Size: Discrete [0-9]*x[0-9]*" | \
+    sed 's/Size: Discrete //' | \
+    sort -t'x' -k1 -nr -k2 -nr | \
+    head -1
 }
 
 # Function to get pixel format preference
 get_best_pixel_format() {
     local cam=$1
-    # Prefer MJPG for better compression, fall back to YUYV
-    if v4l2-ctl --device="$cam" --list-formats-ext | grep -q "MJPG"; then
+    # Check available formats and prefer MJPG, then YUYV
+    local formats=$(v4l2-ctl --device="$cam" --list-formats-ext)
+    if echo "$formats" | grep -q "'MJPG'"; then
         echo "mjpeg"
-    elif v4l2-ctl --device="$cam" --list-formats-ext | grep -q "YUYV"; then
+    elif echo "$formats" | grep -q "'YUYV'"; then
         echo "yuyv422"
     else
-        echo "auto"
+        echo ""
     fi
 }
 
@@ -56,8 +59,14 @@ elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         echo "Could not determine camera resolution, using default"
         input_format="-f v4l2 -i $cam"
     else
-        echo "Using highest resolution: $resolution with format: $pixel_format"
-        input_format="-f v4l2 -video_size $resolution -pixel_format $pixel_format -i $cam"
+        echo "Using highest resolution: $resolution"
+        if [ -n "$pixel_format" ]; then
+            echo "Using pixel format: $pixel_format"
+            input_format="-f v4l2 -video_size $resolution -pixel_format $pixel_format -i $cam"
+        else
+            echo "Using default pixel format"
+            input_format="-f v4l2 -video_size $resolution -i $cam"
+        fi
     fi
     
     # Display camera capabilities
